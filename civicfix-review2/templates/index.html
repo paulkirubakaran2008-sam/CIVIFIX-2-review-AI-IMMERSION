@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CivicFix AI - Review 2</title>
+<style>
+  body{font-family:Arial,sans-serif;background:#f4f7fb;margin:0;color:#172033}
+  main{max-width:720px;margin:40px auto;padding:20px}
+  .card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+  textarea{width:100%;box-sizing:border-box;min-height:110px;padding:12px;border:1px solid #ccd3df;border-radius:8px;font-size:16px}
+  button{margin-top:12px;padding:12px 20px;border:0;border-radius:8px;background:#172033;color:#fff;font-weight:bold;cursor:pointer}
+  #result{margin-top:20px;display:none}
+  .big{font-size:22px;font-weight:bold}
+</style>
+</head>
+<body>
+<main><div class="card">
+  <h1>CivicFix AI <small style="font-size:14px;color:#64748b">Review 2 - category detection</small></h1>
+  <textarea id="text" placeholder="Example: Water is leaking from the tap in the lab"></textarea>
+  <button onclick="send()">Detect category</button>
+  <p id="msg"></p>
+  <div id="result">
+    <div>Predicted category</div><div class="big" id="cat"></div><div id="conf"></div>
+    <h3>Other possibilities</h3><div id="others"></div>
+  </div>
+</div></main>
+<script>
+async function send(){
+  const text=document.getElementById("text").value.trim();
+  const msg=document.getElementById("msg");
+  if(!text){msg.textContent="Please enter a complaint.";return}
+  msg.textContent="Analyzing...";
+  try{
+    const r=await fetch("/predict",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({complaint:text})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error);
+    document.getElementById("cat").textContent=d.category;
+    document.getElementById("conf").textContent=d.confidence+"% confidence";
+    document.getElementById("others").textContent=d.top3.slice(1).map(x=>x.category+" ("+x.confidence+"%)").join(", ");
+    document.getElementById("result").style.display="block";
+    msg.textContent="";
+  }catch(e){msg.textContent=e.message}
+}
+</script>
+</body>
+</html>
