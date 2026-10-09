@@ -1,0 +1,54 @@
+== A. Held-out test set (83 complaints) - severity ==
+ML only:
+              precision    recall  f1-score   support
+
+         Low       1.00      0.97      0.99        38
+      Medium       0.97      0.95      0.96        38
+        High       0.67      0.86      0.75         7
+
+    accuracy                           0.95        83
+   macro avg       0.88      0.93      0.90        83
+weighted avg       0.96      0.95      0.95        83
+
+Hybrid (ML + safety rules):
+              precision    recall  f1-score   support
+
+         Low       1.00      0.97      0.99        38
+      Medium       1.00      0.95      0.97        38
+        High       0.70      1.00      0.82         7
+
+    accuracy                           0.96        83
+   macro avg       0.90      0.97      0.93        83
+weighted avg       0.97      0.96      0.97        83
+
+Safety rules raised the severity of 1 of 83 test complaints; 8 flagged for human review.
+
+== B. Unseen hand-written complaints ==
+OK OK P1 High   Electrical         <- The ceiling fan in room 204 is sparking and smells like burning  [REVIEW]
+XX OK P1 High   Water Leakage      <- A live cable is hanging loose from the pole beside the canteen  [REVIEW]
+OK OK P4 Low    Electrical         <- Tube light in the library is flickering  [REVIEW]
+XX OK P1 High   Water Leakage      <- Main water pipe burst and the ground floor is flooded
+XX OK P4 Low    Water Leakage      <- The washbasin tap keeps dripping in the staff room  [REVIEW]
+OK OK P2 High   Water Leakage      <- Water is seeping through the roof of the seminar hall
+OK OK P1 High   Toilet/Sanitation  <- Sewage is overflowing outside the boys hostel toilets
+OK XX P4 Low    Toilet/Sanitation  <- The girls washroom has no cleaning for two days
+OK OK P3 Medium Garbage            <- Garbage has not been collected near the canteen for a week  [REVIEW]
+OK OK P3 Medium Garbage            <- Overflowing dustbin beside the library gate
+OK XX P3 Medium Pothole            <- Big pothole on the road near the main gate, bikes are skidding  [REVIEW]
+OK OK P4 Low    Pothole            <- Small crack on the road near the parking  [REVIEW]
+OK OK P1 High   Road/Pathway       <- The walkway to the lab block is broken and students may fall  [REVIEW]
+OK OK P1 High   Civil              <- A wall in the old block has a deep crack and may collapse
+OK OK P2 High   Civil              <- Paint is peeling off the corridor wall  [REVIEW]
+OK OK P1 High   Carpentry          <- The classroom door hinge is broken and the door is about to fall
+OK OK P4 Low    Carpentry          <- A bench in the seminar hall has a loose leg
+OK OK P3 Medium Class Items        <- The projector in class 3B is not turning on
+OK OK P2 High   Class Items        <- Whiteboard marker is missing in the classroom  [REVIEW]
+OK OK P3 Medium Class Items        <- Computer lab mouse is not working  [REVIEW]
+OK OK P1 High   Carpentry          <- Emergency exit in the auditorium is blocked by broken chairs
+OK OK P2 High   Water Leakage      <- Water leaking near the electrical panel in the lab
+OK OK P1 High   Water Leakage      <- Mosquito breeding in stagnant water behind the hostel
+OK OK P1 High   Electrical         <- Fire smell from the switch board in the workshop  [REVIEW]
+
+Category correct       : 21/24 (88%)
+Priority >= expected   : 22/24 (92%)
+Critical (P1) caught   : 8/8

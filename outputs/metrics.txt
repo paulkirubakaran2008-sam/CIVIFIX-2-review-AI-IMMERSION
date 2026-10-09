@@ -1,0 +1,18 @@
+Test accuracy: 98.8%
+
+                   precision    recall  f1-score   support
+
+        Carpentry       0.88      1.00      0.93         7
+            Civil       1.00      1.00      1.00         6
+      Class Items       1.00      0.80      0.89         5
+       Electrical       1.00      1.00      1.00        11
+          Garbage       1.00      1.00      1.00        15
+         Plumbing       1.00      1.00      1.00         9
+          Pothole       1.00      1.00      1.00        11
+     Road/Pathway       1.00      1.00      1.00         6
+Toilet/Sanitation       1.00      1.00      1.00         2
+    Water Leakage       1.00      1.00      1.00        11
+
+         accuracy                           0.99        83
+        macro avg       0.99      0.98      0.98        83
+     weighted avg       0.99      0.99      0.99        83

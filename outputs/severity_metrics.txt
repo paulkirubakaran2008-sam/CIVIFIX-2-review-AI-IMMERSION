@@ -1,0 +1,12 @@
+Severity test accuracy: 95.2%
+5-fold cross-validation: 96.6% +/- 1.4%
+
+              precision    recall  f1-score   support
+
+         Low       1.00      0.97      0.99        38
+      Medium       0.97      0.95      0.96        38
+        High       0.67      0.86      0.75         7
+
+    accuracy                           0.95        83
+   macro avg       0.88      0.93      0.90        83
+weighted avg       0.96      0.95      0.95        83

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CivicFix AI - Review 2</title>
+<style>
+  body{font-family:Arial,sans-serif;background:#f4f7fb;margin:0;color:#172033}
+  main{max-width:760px;margin:40px auto;padding:20px}
+  .card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+  textarea{width:100%;box-sizing:border-box;min-height:110px;padding:12px;border:1px solid #ccd3df;border-radius:8px;font-size:16px}
+  button{margin-top:12px;padding:12px 20px;border:0;border-radius:8px;background:#172033;color:#fff;font-weight:bold;cursor:pointer}
+  #result{margin-top:20px;display:none}
+  .row{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}
+  .box{flex:1;min-width:150px;background:#f4f7fb;border-radius:10px;padding:12px}
+  .box small{display:block;color:#64748b;margin-bottom:4px}
+  .big{font-size:20px;font-weight:bold}
+  .badge{display:inline-block;padding:4px 12px;border-radius:20px;color:#fff;font-weight:bold}
+  .P1{background:#b91c1c}.P2{background:#ea580c}.P3{background:#ca8a04}.P4{background:#15803d}
+  .warn{background:#fef3c7;border-left:4px solid #d97706;padding:10px 12px;border-radius:6px;margin:12px 0}
+  .rule{background:#fee2e2;border-left:4px solid #b91c1c;padding:8px 12px;border-radius:6px;margin:6px 0}
+  .chip{display:inline-block;background:#e2e8f0;border-radius:14px;padding:3px 10px;margin:2px;font-size:14px}
+  h3{margin:18px 0 6px}
+</style>
+</head>
+<body>
+<main><div class="card">
+  <h1>CivicFix AI <small style="font-size:14px;color:#64748b">Review 2 - severity, priority &amp; explainability</small></h1>
+  <textarea id="text" placeholder="Example: Electrical wire is exposed near students in the lab"></textarea>
+  <button onclick="send()">Analyse complaint</button>
+  <p id="msg"></p>
+  <div id="result">
+    <div id="review" class="warn" style="display:none"></div>
+    <div class="row">
+      <div class="box"><small>Priority</small><span id="prio" class="badge"></span><div id="score"></div></div>
+      <div class="box"><small>Fix within (SLA)</small><div class="big" id="sla"></div></div>
+      <div class="box"><small>Department</small><div class="big" id="dept"></div></div>
+    </div>
+    <div class="row">
+      <div class="box"><small>Category</small><div class="big" id="cat"></div><div id="catconf"></div></div>
+      <div class="box"><small>Severity</small><div class="big" id="sev"></div><div id="sevnote"></div></div>
+    </div>
+    <div id="rules"></div>
+    <h3>Why this result?</h3>
+    <div>Category came from: <span id="cw"></span></div>
+    <div style="margin-top:6px">Severity came from: <span id="sw"></span></div>
+    <h3>Other possible categories</h3><div id="others"></div>
+  </div>
+</div></main>
+<script>
+const chips=a=>a.length?a.map(x=>'<span class="chip">'+esc(x.word)+' (+'+x.impact+'%)</span>').join(""):"no single word dominated";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+async function send(){
+  const text=document.getElementById("text").value.trim();
+  const msg=document.getElementById("msg");
+  if(!text){msg.textContent="Please enter a complaint.";return}
+  msg.textContent="Analyzing...";
+  try{
+    const r=await fetch("/predict",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({complaint:text})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error);
+    const p=document.getElementById("prio");p.textContent=d.priority+" "+d.priority_label;p.className="badge "+d.priority;
+    document.getElementById("score").textContent="score "+d.priority_score+"/100";
+    document.getElementById("sla").textContent=d.sla;
+    document.getElementById("dept").textContent=d.department;
+    document.getElementById("cat").textContent=d.category;
+    document.getElementById("catconf").textContent=d.category_confidence+"% confidence";
+    document.getElementById("sev").textContent=d.severity;
+    document.getElementById("sevnote").textContent=d.escalated_by_rules?("raised from "+d.ml_severity+" by safety rules"):(d.severity_confidence+"% confidence");
+    document.getElementById("rules").innerHTML=d.safety_rules.map(r=>'<div class="rule">Safety rule: '+esc(r.reason)+'</div>').join("");
+    const rv=document.getElementById("review");
+    rv.style.display=d.needs_human_review?"block":"none";
+    rv.textContent="Needs human review - "+d.review_reason+".";
+    document.getElementById("cw").innerHTML=chips(d.explanation.category_words);
+    document.getElementById("sw").innerHTML=chips(d.explanation.severity_words);
+    document.getElementById("others").textContent=d.category_top3.slice(1).map(x=>x.category+" ("+x.confidence+"%)").join(", ");
+    document.getElementById("result").style.display="block";
+    msg.textContent="";
+  }catch(e){msg.textContent=e.message}
+}
+</script>
+</body>
+</html>
