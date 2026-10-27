@@ -1,0 +1,35 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "app": {
+      "root": ".",
+      "framework": "flask"
+    },
+    "backend": {
+      "root": "CivicFix-Campus-Phase5/backend",
+      "framework": "fastapi"
+    },
+    "frontend": {
+      "root": "CivicFix-Campus-Phase5/frontend",
+      "framework": "vite"
+    },
+    "civicfix-review2": {
+      "root": "civicfix-review2",
+      "framework": "flask"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "backend"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "app"
+      }
+    }
+  ]
+}
