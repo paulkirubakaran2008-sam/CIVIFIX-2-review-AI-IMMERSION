@@ -84,6 +84,6 @@ Run the 16-point production checklist in DEPLOYMENT.md, including cross-campus i
 Add rate limiting and page metadata
 Move demo accounts to hashed, persisted users
 8. Summary
-The application works end to end locally and is covered by 8 passing tests. Its most security-sensitive part, multi-campus isolation, is enforced at the data layer and has its own test. Against the full deployment brief I estimate it is roughly 45-50% complete. The main gaps are the live deployment and the live Gemini verification, and I have not claimed either as done.
+The application works end to end locally and is covered by 8 passing tests. Its most security-sensitive part, multi-campus isolation, is enforced at the data layer and has its own test. Against the full deployment brief I estimate it is roughly omplete. The main gaps are the live deployment and the live Gemini verification, and I have not claimed either as done.
 
 
